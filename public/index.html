@@ -32,8 +32,9 @@
       </form>
 
       <p>here are all of the employees in the system</p>
+      Filter:<input ng-model="searchText" >
       <ul class="unstyled">
-        <li ng-repeat="employee in employees">
+        <li ng-repeat="employee in employees | filter:searchText">
           <button ng-click="selectEmployee()">Edit</button>
           <button ng-click="deleteEmployee()">Delete</button>
           <span>{{employee.name}}</span>
