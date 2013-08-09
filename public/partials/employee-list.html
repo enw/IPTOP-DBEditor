@@ -1,7 +1,9 @@
 <div>
   <h2>all of the employees in the system</h2>
-  <a href="#/employee/new">add employee</a>
-  <div class="search">Filter:<input ng-model="searchText"></div>
+  <div class="tool">
+    <div>Filter:<input ng-model="searchText"></div>
+    <div><a href="#/employee/new">add employee</a></div>
+  </div>
   <ul class="unstyled">
     <li ng-repeat="employee in employees | filter:searchText">
       <button ng-click="deleteEmployee()">Delete</button>
