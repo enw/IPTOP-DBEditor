@@ -1,3 +1,14 @@
 <div>
-  list
+  <h2>all of the employees in the system</h2>
+  <a href="#/employee/new">add employee</a>
+  <div class="search">Filter:<input ng-model="searchText"></div>
+  <ul class="unstyled">
+    <li ng-repeat="employee in employees | filter:searchText">
+      <button ng-click="deleteEmployee()">Delete</button>
+      <span><a href="#/employee/{{employee.id}}">{{employee.name}}</a></span>
+      <span>{{employee.email}}</span>
+      <span>{{employee.department}}</span>
+      <span>{{employee.isManager}}</span>
+    </li>
+  </ul>
 </div>

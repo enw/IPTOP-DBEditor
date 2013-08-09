@@ -13,39 +13,9 @@
   </head>
   <body>
     <!-- angular views -->
-    <div ng-view></div>
-
-    <!-- page content -->
     <div>
-      <h1>employee db editor</h1>
-      <p>you can add, edit or remove employees here.  'id' field should be blank for new employees.</p>
-    </div>
-
-    <div ng-controller="IptopCtrl">
-      <form ng-submit="addEmployee()">
-        id: <input type="text" ng-model="activeEmployee.id"  size="4"
-               placeholder="id">
-        Name: <input type="text" ng-model="activeEmployee.name"  size="30"
-               placeholder="Nolan Ryan">
-        Email:<input type="text" ng-model="activeEmployee.email"  size="30"
-               placeholder="nolan.ryan@astros.com">
-        Manages people (0 or 1)? : <input type="text" ng-model="activeEmployee.isManager"  size="2"
-               placeholder="0">
-        <input class="btn-primary" ng-click="upsertEmployee()" type="submit" value="add or update employee">
-      </form>
-
-      <p>here are all of the employees in the system</p>
-      Filter:<input ng-model="searchText" >
-      <ul class="unstyled">
-        <li ng-repeat="employee in employees | filter:searchText">
-          <button ng-click="selectEmployee()">Edit</button>
-          <button ng-click="deleteEmployee()">Delete</button>
-          <span>{{employee.name}}</span>
-          <span>{{employee.email}}</span>
-          <span>{{employee.department}}</span>
-          <span>{{employee.isManager}}</span>
-        </li>
-      </ul>
+      <h1><a href="/#">employee db editor</a></h1>
+      <div ng-view></div>
     </div>
   </body>
 </html>

@@ -1,3 +1,15 @@
-<div>
-  deets
-</div>
+    <!-- page content -->
+    <div>
+      <p>you can add, edit or remove employees here.  'id' field should be blank for new employees.</p>
+      <form ng-submit="addEmployee()">
+        id: <input type="text" ng-model="employee.id"  size="4"
+               placeholder="id">
+        Name: <input type="text" ng-model="employee.name"  size="30"
+               placeholder="Nolan Ryan">
+        Email:<input type="text" ng-model="employee.email"  size="30"
+               placeholder="nolan.ryan@astros.com">
+        Manages people (0 or 1)? : <input type="text" ng-model="employee.isManager"  size="2"
+               placeholder="0">
+        <input class="btn-primary" ng-click="upsertEmployee()" type="submit" value="add or update employee">
+      </form>
+    </div>

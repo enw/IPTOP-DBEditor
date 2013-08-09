@@ -13,7 +13,7 @@ angular.module('iptop', []).
   config(['$routeProvider', function($routeProvider) {
   $routeProvider.
       when('/employees', {templateUrl: 'partials/employee-list.html',   controller: IptopCtrl}).
-      when('/employee/:id', {templateUrl: 'partials/employee-detail.html', controller: IptopCtrl}).
+      when('/employee/:id', {templateUrl: 'partials/employee-detail.html', controller: EmployeeDetailCtrl}).
       otherwise({redirectTo: '/employees'});
 }]);
 
@@ -74,5 +74,36 @@ function IptopCtrl($scope, $http) {
   }
   $scope.selectEmployee = function () {
       $scope.activeEmployee = this.employee;
+  }
+}
+
+function EmployeeDetailCtrl($scope, $routeParams, $http, $location) {
+    console.log("EmployeeDetailCtrl", $routeParams);
+    // make call for details if no id is passed in 
+    if ($routeParams.id != "new") {
+        $http.get('employee/'+$routeParams.id).success(function (data) {
+            console.log("got it", data);
+            $scope.employee = data;
+        })
+    }
+
+
+  $scope.employee = {};
+
+  $scope.upsertEmployee = function () {
+      // don't require user to enter 0 if there is no active employee
+      if (!this.employee.isManager) this.employee.isManager=0;
+
+      // don't do anything if UI has no values
+      if (!this.employee.name || !this.employee.email) return;
+
+      $http.post('/upsertEmployee', this.employee).
+          success(function(data, status, headers, config) {
+              console.log("SUCCESS");
+              $location.path("#/employees");
+          }).
+          error(function(data, status, headers, config) {
+              console.log("upsert ERR");
+          });
   }
 }

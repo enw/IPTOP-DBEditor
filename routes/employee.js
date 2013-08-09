@@ -3,7 +3,7 @@ var db = new sqlite3.Database('data/data.db');
 
 
 /*
- * GET employee listing.
+ * GET listing of all employees
  */
 exports.list = function(req, res){
     db.all("select * from employee ORDER BY name;", function (err, employees) {
@@ -11,6 +11,21 @@ exports.list = function(req, res){
                 res.send("ERR");
             } else {
                 res.send(employees);
+            }
+        });
+};
+
+/*
+ * GET one employees
+ */
+exports.get = function(req, res){
+console.log("GET");
+    db.all("select * from employee WHERE id="+req.params.id+";", 
+           function (err, employee) {
+            if (err) {
+                res.send("ERR");
+            } else {
+                res.send(employee[0]);
             }
         });
 };
@@ -42,7 +57,6 @@ exports.upsert = function(req, res){
         return employee[p];
     };
     if (employee.id) {
-        console.log("TODO:update", req.body);
         // update
         // like this UPDATE Item SET ItemName='Tea powder', ItemCategoryName='Food' WHERE ItemId='1';
         var q = "UPDATE employee SET name="+param('name')+", email="+param('email')+", isManager="+num('isManager')+" WHERE id="+num('id')+";"

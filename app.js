@@ -34,6 +34,7 @@ if ('development' == app.get('env')) {
 //app.get('/', routes.index);
 //app.get('/users', user.list);
 // just use GET for all during development.  eventually maybe support HTTP verbs...
+app.get('/employee/:id', employee.get);
 app.get('/employees', employee.list);
 app.get('/deleteEmployee/:id', employee.delete);
 app.post('/upsertEmployee', employee.upsert);
