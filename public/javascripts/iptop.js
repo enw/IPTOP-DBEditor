@@ -1,3 +1,24 @@
+/* TODO:
+   make multipage w/routes
+   design basic skin
+   replace $http calls with services
+   push to lab 
+
+   BUG:
+   details on actively-edited employee are update on edit, should be on submit
+*/
+
+// module definition defines route provider
+angular.module('iptop', []).
+  config(['$routeProvider', function($routeProvider) {
+  $routeProvider.
+      when('/employees', {templateUrl: 'partials/employee-list.html',   controller: IptopCtrl}).
+      when('/employee/:id', {templateUrl: 'partials/employee-detail.html', controller: IptopCtrl}).
+      otherwise({redirectTo: '/employees'});
+}]);
+
+
+// Controller
 function IptopCtrl($scope, $http) {
     function updateUI () {
   $http({method: 'GET', url: '/employees'}).
