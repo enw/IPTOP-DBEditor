@@ -49,16 +49,22 @@ angular.module('iptop', []).
 
 // Controller
 function IptopCtrl($scope, $http, employeeSvc) {
+    // helper
+    function logErr(err) {
+        if (!err) err="";
+        console.log("ERR", err);
+    }
+
+    // helper
     function updateUI () {
         employeeSvc.findAll().then(
            function(data){
                $scope.employees=data;
-           },
-           function(err) {
-               console.log("ERR", err);
-           });
+           }, logErr);
     };
     updateUI();
+
+
 
   $scope.employees = [
                       /*
@@ -71,20 +77,10 @@ function IptopCtrl($scope, $http, employeeSvc) {
   $scope.activeEmployee = {};
 
   $scope.deleteEmployee = function () {
-      console.log("TODO: deleteEmployee", this.employee);
-
-      employeeSvc.deleteEmployee(this.employee.id).then(
-          function () {
-              // upate view;
-              updateUI();
-          },
-          function () {
-console.log("ERR");
-          }
-      );
+      employeeSvc.deleteEmployee(this.employee.id).then(updateUI, logErr);
   }
+
   $scope.upsertEmployee = function () {
-      console.log("TODO: updateEmployee", this.activeEmployee);
       // don't require user to enter 0 if there is no active employee
       if (!this.activeEmployee.isManager) this.activeEmployee.isManager=0;
 
