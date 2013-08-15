@@ -42,13 +42,34 @@ angular.module('iptop', []).
                     deferred.reject("ERRR while deleting");
                 });
             return deferred.promise;
+        },
+
+        upsertEmployee: function (emp) {
+	    var deferred = $q.defer();
+            $http.post('/upsertEmployee', emp). 
+                success(function() {
+                    deferred.resolve(data);
+                }).
+                error(function(data, status, headers, config) {
+                    deferred.reject("ERRR while deleting");
+                });
+            return deferred.promise;
+/*
+
+  success(function(data, status, headers, config) {
+          updateUI();
+  }).
+  error(function(data, status, headers, config) {
+      console.log("ERR");
+  });
+*/
         }
     };
 });
 
 
 // Controller
-function IptopCtrl($scope, $http, employeeSvc) {
+function IptopCtrl($scope, employeeSvc) {
     // helper
     function logErr(err) {
         if (!err) err="";
@@ -63,7 +84,6 @@ function IptopCtrl($scope, $http, employeeSvc) {
            }, logErr);
     };
     updateUI();
-
 
 
   $scope.employees = [
@@ -86,15 +106,8 @@ function IptopCtrl($scope, $http, employeeSvc) {
 
       // don't do anything if UI has no values
       if (!this.activeEmployee.name || !this.activeEmployee.email) return;
-
-      $http.post('/upsertEmployee', this.activeEmployee).
-  success(function(data, status, headers, config) {
-          updateUI();
-  }).
-  error(function(data, status, headers, config) {
-      console.log("ERR");
-  });
-
+      
+      employeeSvc.upsert(this.activeEmployee).then(updateUI, logErr);
   }
   $scope.selectEmployee = function () {
       $scope.activeEmployee = this.employee;
