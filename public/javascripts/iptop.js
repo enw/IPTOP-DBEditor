@@ -53,7 +53,17 @@ angular.module('iptop', []).
                 .success(resolver(deferred))
 	        .error(errorer("ERR while upserting", deferred));
             return deferred.promise;
+        },
+        
+        /* get deets for one employee */
+        getOne: function (id) {
+	    var deferred = $q.defer();
+            $http.get('employee/'+id)
+                .success(resolver(deferred))
+                .error(errorer("ERR while getting one", id));
+            return deferred.promise;
         }
+
     };
 });
 
@@ -104,14 +114,15 @@ function IptopCtrl($scope, employeeSvc) {
   }
 }
 
-function EmployeeDetailCtrl($scope, $routeParams, $http, $location) {
-    console.log("EmployeeDetailCtrl", $routeParams);
+function EmployeeDetailCtrl($scope, $routeParams, $http, $location, employeeSvc) {
+    //console.log("EmployeeDetailCtrl", $routeParams);
+
     // make call for details if no id is passed in 
     if ($routeParams.id != "new") {
-        $http.get('employee/'+$routeParams.id).success(function (data) {
-            console.log("got it", data);
+        employeeSvc.getOne($routeParams.id)
+        .then(function (data) {
             $scope.employee = data;
-        })
+        });
     }
 
 
