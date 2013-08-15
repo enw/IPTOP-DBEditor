@@ -10,6 +10,16 @@ angular.module('iptop', []).
       when('/employee/:id', {templateUrl: 'partials/employee-detail.html', controller: EmployeeDetailCtrl}).
       otherwise({redirectTo: '/employees'});
 }]). factory('employeeSvc', function ($http, $q) {
+    // helpers
+    function resolver(deferred) {
+        return function (data) {deferred.resolve(data);}
+    }
+    function errorer(msg, deferred) {
+        return function(deferred) {
+	    deferred.reject(msg);
+        }
+    }
+
     return {
         apiPath:'/',
         
@@ -18,14 +28,11 @@ angular.module('iptop', []).
 	    //Creating a deferred object
 	    var deferred = $q.defer();
             
-	    //Calling Web API to fetch shopping cart items
-	    $http.get(this.apiPath+'employees').success(function(data){
-		//Passing data to deferred's resolve function on successful completion
-		deferred.resolve(data);
-	    }).error(function(){
-		//Sending a friendly error message in case of failure
-		deferred.reject("An error occured while fetching items");
-	    });
+	    //Calling Web API to fetch employees
+	    $http.get(this.apiPath+'employees')
+                .success(resolver(deferred))
+	        .error(errorer("An error occured while fetching items", deferred));
+
 	    //Returning the promise object
 	    return deferred.promise;
         },
@@ -33,36 +40,19 @@ angular.module('iptop', []).
         /* delete employee */
         deleteEmployee: function (id) {
 	    var deferred = $q.defer();
-            
-            $http({method: 'GET', url: '/deleteEmployee/'+id}).
-                success(function(data, status, headers, config) {
-                    deferred.resolve(data);
-                }).
-                error(function(data, status, headers, config) {
-                    deferred.reject("ERRR while deleting");
-                });
+            $http.get('/deleteEmployee/'+id)
+                .success(resolver(deferred))
+	        .error(errorer("ERR while deleting", deferred));
             return deferred.promise;
         },
 
+        /* add or update employee */
         upsertEmployee: function (emp) {
 	    var deferred = $q.defer();
-            $http.post('/upsertEmployee', emp). 
-                success(function() {
-                    deferred.resolve(data);
-                }).
-                error(function(data, status, headers, config) {
-                    deferred.reject("ERRR while deleting");
-                });
+            $http.post('/upsertEmployee', emp)
+                .success(resolver(deferred))
+	        .error(errorer("ERR while upserting", deferred));
             return deferred.promise;
-/*
-
-  success(function(data, status, headers, config) {
-          updateUI();
-  }).
-  error(function(data, status, headers, config) {
-      console.log("ERR");
-  });
-*/
         }
     };
 });
