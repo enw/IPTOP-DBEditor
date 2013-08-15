@@ -10,19 +10,39 @@ angular.module('iptop', []).
       when('/employee/:id', {templateUrl: 'partials/employee-detail.html', controller: EmployeeDetailCtrl}).
       otherwise({redirectTo: '/employees'});
 }]). factory('employeeSvc', function ($http, $q) {
+    return {
+        apiPath:'/',
+        
+        /* find all employees */
+	findAll: function () {
+	    //Creating a deferred object
+	    var deferred = $q.defer();
+            
+	    //Calling Web API to fetch shopping cart items
+	    $http.get(this.apiPath+'employees').success(function(data){
+		//Passing data to deferred's resolve function on successful completion
+		deferred.resolve(data);
+	    }).error(function(){
+		//Sending a friendly error message in case of failure
+		deferred.reject("An error occured while fetching items");
+	    });
+	    //Returning the promise object
+	    return deferred.promise;
+        }
+    };
 });
 
 
 // Controller
-function IptopCtrl($scope, $http) {
+function IptopCtrl($scope, $http, employeeSvc) {
     function updateUI () {
-  $http({method: 'GET', url: '/employees'}).
-  success(function(data, status, headers, config) {
-      $scope.employees = data;
-  }).
-  error(function(data, status, headers, config) {
-      console.log("ERR");
-  });
+        employeeSvc.findAll().then(
+           function(data){
+               $scope.employees=data;
+           },
+           function(err) {
+               console.log("ERR", err);
+           });
     };
     updateUI();
 
