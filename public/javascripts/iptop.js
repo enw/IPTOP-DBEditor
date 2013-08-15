@@ -1,11 +1,5 @@
 /* TODO:
-   make multipage w/routes
-   design basic skin
    replace $http calls with services
-   push to lab 
-
-   BUG:
-   details on actively-edited employee are update on edit, should be on submit
 */
 
 // module definition defines route provider
@@ -15,7 +9,8 @@ angular.module('iptop', []).
       when('/employees', {templateUrl: 'partials/employee-list.html',   controller: IptopCtrl}).
       when('/employee/:id', {templateUrl: 'partials/employee-detail.html', controller: EmployeeDetailCtrl}).
       otherwise({redirectTo: '/employees'});
-}]);
+}]). factory('employeeSvc', function ($http, $q) {
+});
 
 
 // Controller
