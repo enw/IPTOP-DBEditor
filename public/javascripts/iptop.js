@@ -47,7 +47,7 @@ angular.module('iptop', []).
         },
 
         /* add or update employee */
-        upsertEmployee: function (emp) {
+        upsert: function (emp) {
 	    var deferred = $q.defer();
             $http.post('/upsertEmployee', emp)
                 .success(resolver(deferred))
@@ -100,21 +100,12 @@ function IptopCtrl($scope, employeeSvc) {
       employeeSvc.deleteEmployee(this.employee.id).then(updateUI, logErr);
   }
 
-  $scope.upsertEmployee = function () {
-      // don't require user to enter 0 if there is no active employee
-      if (!this.activeEmployee.isManager) this.activeEmployee.isManager=0;
-
-      // don't do anything if UI has no values
-      if (!this.activeEmployee.name || !this.activeEmployee.email) return;
-      
-      employeeSvc.upsert(this.activeEmployee).then(updateUI, logErr);
-  }
   $scope.selectEmployee = function () {
       $scope.activeEmployee = this.employee;
   }
 }
 
-function EmployeeDetailCtrl($scope, $routeParams, $http, $location, employeeSvc) {
+function EmployeeDetailCtrl($scope, $routeParams, $location, employeeSvc) {
     //console.log("EmployeeDetailCtrl", $routeParams);
 
     // make call for details if no id is passed in 
@@ -134,14 +125,12 @@ function EmployeeDetailCtrl($scope, $routeParams, $http, $location, employeeSvc)
 
       // don't do anything if UI has no values
       if (!this.employee.name || !this.employee.email) return;
-
-      $http.post('/upsertEmployee', this.employee).
-          success(function(data, status, headers, config) {
-              console.log("SUCCESS");
+      
+      employeeSvc.upsert(this.employee).then(
+          function () {
               $location.path("#/employees");
-          }).
-          error(function(data, status, headers, config) {
-              console.log("upsert ERR");
+          }, function (err) {
+              console.log("ERR", err);
           });
   }
 }
