@@ -28,6 +28,20 @@ angular.module('iptop', []).
 	    });
 	    //Returning the promise object
 	    return deferred.promise;
+        },
+
+        /* delete employee */
+        deleteEmployee: function (id) {
+	    var deferred = $q.defer();
+            
+            $http({method: 'GET', url: '/deleteEmployee/'+id}).
+                success(function(data, status, headers, config) {
+                    deferred.resolve(data);
+                }).
+                error(function(data, status, headers, config) {
+                    deferred.reject("ERRR while deleting");
+                });
+            return deferred.promise;
         }
     };
 });
@@ -59,16 +73,15 @@ function IptopCtrl($scope, $http, employeeSvc) {
   $scope.deleteEmployee = function () {
       console.log("TODO: deleteEmployee", this.employee);
 
-  $http({method: 'GET', url: '/deleteEmployee/'+this.employee.id}).
-  success(function(data, status, headers, config) {
-          console.log("SUCCESS: update view");
-          // update view
-          updateUI();
-  }).
-  error(function(data, status, headers, config) {
-      console.log("ERR");
-  });
-
+      employeeSvc.deleteEmployee(this.employee.id).then(
+          function () {
+              // upate view;
+              updateUI();
+          },
+          function () {
+console.log("ERR");
+          }
+      );
   }
   $scope.upsertEmployee = function () {
       console.log("TODO: updateEmployee", this.activeEmployee);
